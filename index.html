@@ -323,8 +323,14 @@
         if (!isDrawing) return;
 
         const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        let x, y;
+        if (e.touches && e.touches.length > 0) {
+          x = e.touches[0].clientX - rect.left;
+          y = e.touches[0].clientY - rect.top;
+        } else {
+          x = e.clientX - rect.left;
+          y = e.clientY - rect.top;
+        }
 
         ctx.globalCompositeOperation = 'destination-out';
         ctx.beginPath();
@@ -356,6 +362,25 @@
           canvas.classList.add("lucky-glow");
         }
       }
+
+      canvas.addEventListener('touchstart', (e) => {
+        isDrawing = true;
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+        e.preventDefault();
+      }, {passive: false});
+
+      window.addEventListener('touchend', () => {
+        isDrawing = false;
+        sound.pause();
+        sound.currentTime = 0;
+      }, {passive: false});
+
+      canvas.addEventListener('touchmove', (e) => {
+        if (!isDrawing) return;
+        clear(e);
+        e.preventDefault();
+      }, {passive: false});
 
       canvas.addEventListener('mousedown', () => {
         if (!isDrawing) {
