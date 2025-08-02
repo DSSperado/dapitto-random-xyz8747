@@ -201,6 +201,7 @@
 
       const sound = document.getElementById('scratch-sound');
       sound.loop = false;
+      sound.volume = 1.0;
       
       function clear(e) {
         if (!isDrawing) return;
@@ -358,3 +359,4 @@
 <audio id="scratch-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-knife-slice-1474.mp3" preload="auto"></audio>
 </body>
 </html>
+
