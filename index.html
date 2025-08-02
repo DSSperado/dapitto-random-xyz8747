@@ -24,7 +24,7 @@
     h1 {
       font-size: 100px;
       font-weight: bold;
-      color: #ffffff;
+      color: #ffffffff;
       text-shadow: 
         -3px -3px 0 #000,  
         3px -3px 0 #000,  
@@ -133,6 +133,27 @@
     .reset button:hover {
       background-color: #f1b400;
     }
+    .spark-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(white, rgba(255, 215, 0, 0.8));
+      pointer-events: none;
+      opacity: 1;
+      animation: particle-explode 0.8s ease-out forwards;
+    }
+
+    @keyframes particle-explode {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(0.5);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -173,10 +194,29 @@
         ctx.beginPath();
         ctx.arc(x, y, 15, 0, 2 * Math.PI);
         ctx.fill();
+
+        const particleCount = 6 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'spark-particle';
+          
+          const angle = Math.random() * 2 * Math.PI;
+          const distance = 20 + Math.random() * 20;
+          const dx = Math.cos(angle) * distance;
+          const dy = Math.sin(angle) * distance;
+
+          particle.style.left = `${x}px`;
+          particle.style.top = `${y}px`;
+          particle.style.setProperty('--x', `${dx}px`);
+          particle.style.setProperty('--y', `${dy}px`);
+
+          canvas.parentElement.appendChild(particle);
+          setTimeout(() => particle.remove(), 800);
+        }
       }
 
       canvas.addEventListener('mousedown', () => isDrawing = true);
-      canvas.addEventListener('mouseup', () => isDrawing = false);
+      window.addEventListener('mouseup', () => isDrawing = false);
       canvas.addEventListener('mousemove', clear);
     }
 
@@ -233,5 +273,3 @@
   </script>
 </body>
 </html>
-
-
