@@ -228,6 +228,60 @@
       border-radius: 50%;
       transition: box-shadow 0.3s ease-in-out;
     }
+    @media (max-width: 600px) {
+      body {
+        padding: 4vw !important;
+      }
+      h1 {
+        font-size: 8vw !important;
+        height: 8vw !important;
+      }
+      .ticket {
+        width: 98vw !important;
+        max-width: 98vw !important;
+        min-width: 0 !important;
+        padding: 4vw 1vw !important;
+        flex-direction: column !important;
+        align-items: center !important;
+      }
+      .lucky-section,
+      .number-section {
+        width: 100% !important;
+        max-width: 100vw !important;
+        align-items: center !important;
+        margin: 0 auto !important;
+        gap: 2vw !important;
+      }
+      .lucky-label {
+        font-size: 5vw !important;
+        margin-bottom: 1vw !important;
+      }
+      .circle-container {
+        width: 16vw !important;
+        height: 16vw !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+        max-width: 70px !important;
+        max-height: 70px !important;
+        margin: 2vw !important;
+      }
+      .number-label {
+        font-size: 6vw !important;
+        min-font-size: 16px !important;
+      }
+      .row {
+        gap: 2vw !important;
+      }
+      .instruction {
+        font-size: 5vw !important;
+        margin-top: 4vw !important;
+      }
+      .reset button {
+        font-size: 4vw !important;
+        padding: 2vw 7vw !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -249,7 +303,7 @@
     <span class="highlight-text">행운숫자를 포함하여 2개를 모두 맞추면 성공!</span>
   </div>
   <div class="reset">
-    <button onclick="generateTicket()">다시 시작</button>
+    <button onclick="generateTicket()">섞기</button>
   </div>
   <div id="result"></div>
 
