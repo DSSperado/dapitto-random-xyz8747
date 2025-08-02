@@ -170,6 +170,7 @@
   </style>
 </head>
 <body>
+  <audio id="scratch-sound" src="pencil-scratch-30373.mp3" preload="auto"></audio>
   <canvas id="stars"></canvas>
   <h1>다 피 또</h1>
   <div class="ticket">
@@ -198,8 +199,12 @@
       const ctx = canvas.getContext('2d');
       let isDrawing = false;
 
+      const sound = document.getElementById('scratch-sound');
+      sound.loop = false;
+      
       function clear(e) {
         if (!isDrawing) return;
+
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -229,8 +234,20 @@
         }
       }
 
-      canvas.addEventListener('mousedown', () => isDrawing = true);
-      window.addEventListener('mouseup', () => isDrawing = false);
+      canvas.addEventListener('mousedown', () => {
+        if (!isDrawing) {
+          isDrawing = true;
+          sound.currentTime = 0;
+          sound.play().catch(() => {});
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDrawing = false;
+        sound.pause();
+        sound.currentTime = 0;
+      });
+
       canvas.addEventListener('mousemove', clear);
     }
 
@@ -338,6 +355,6 @@
     createStarsCanvas(); // 실행
     generateTicket();
   </script>
+<audio id="scratch-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-knife-slice-1474.mp3" preload="auto"></audio>
 </body>
 </html>
-
