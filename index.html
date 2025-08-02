@@ -111,9 +111,9 @@
     }
     .instruction {
       margin-top: 50px;
-      font-size: 50px; /* 기존 24px → 더 큼 */
+      font-size: 50px;
       text-align: center;
-      font-weight: medium;
+      font-weight: Medium;
       color: #333;
     }
     .reset {
@@ -135,7 +135,7 @@
       font-weight: bold;
     }
     .reset button:hover {
-      background-color: #f1b400;
+      background-color: #fcee6e;
     }
     .spark-particle {
       position: absolute;
@@ -167,6 +167,33 @@
       z-index: 0;
       pointer-events: none;
     }
+    .highlight-text {
+      position: relative;
+      display: inline-block;
+      font-weight: Medium;
+      color: #333;
+      z-index: 1;
+    }
+
+    .highlight-text::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      right: -5px;
+      top: 50%;
+      height: 1.4em;
+      transform: translateY(-50%) rotate(-2deg);
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff38c,
+        #fff38c 5px,
+        #fff38c 5px,
+        #fff38c 10px
+      );
+      z-index: -1;
+      border-radius: 8px;
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body>
@@ -184,7 +211,8 @@
     </div>
   </div>
   <div class="instruction">
-    숫자 1 ~ 9 중 2개를 선택<br>행운숫자를 포함하여 2개를 모두 맞추면 성공!
+    <span class="highlight-text">숫자 1 ~ 9 중 2개를 선택</span><br>
+    <span class="highlight-text">행운숫자를 포함하여 2개를 모두 맞추면 성공!</span>
   </div>
   <div class="reset">
     <button onclick="generateTicket()">다시 시작</button>
@@ -359,6 +387,3 @@
 <audio id="scratch-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-knife-slice-1474.mp3" preload="auto"></audio>
 </body>
 </html>
-
-
-
