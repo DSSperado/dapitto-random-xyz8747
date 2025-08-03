@@ -492,8 +492,12 @@
           const to = positions[idx];
           const dx = to.x - from.x;
           const dy = to.y - from.y;
-          containers[i].style.transition = 'transform 0.6s ease';
-          containers[i].style.transform = `translate(${dx}px, ${dy}px)`;
+          containers[i].style.transition = 'transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+          containers[i].style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
+          setTimeout(() => {
+            containers[i].style.transition += ', transform 0.2s ease';
+            containers[i].style.transform = `translate(${dx}px, ${dy}px) scale(1)`;
+          }, 200);
         });
 
         setTimeout(() => {
@@ -567,6 +571,3 @@
   </script>
 </body>
 </html>
-
-
-
