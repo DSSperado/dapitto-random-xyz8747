@@ -57,6 +57,10 @@
       width: 200px;
       margin-top: 35px;
     }
+    #lucky-container {
+      margin-top: 0px;
+      margin-left: -15px;
+    }
     .number-section {
       display: flex;
       flex-direction: column;
@@ -444,38 +448,69 @@
       }
 
       ticketSet = fullSet.slice(0, 6);
-      lucky = ticketSet[Math.floor(Math.random() * 6)];
+      const luckyIndex = Math.floor(Math.random() * 6);
+      lucky = ticketSet[luckyIndex];
 
-      // lucky
-      createScratchCircle(document.getElementById('lucky-container'), lucky, true);
-
-      const filtered = ticketSet.filter(n => n !== lucky);
+      const luckyContainer = document.getElementById('lucky-container');
       const row1 = document.getElementById('row1');
       const row2 = document.getElementById('row2');
+      luckyContainer.innerHTML = '';
       row1.innerHTML = '';
       row2.innerHTML = '';
 
-      filtered.forEach((num, idx) => {
+      const containers = [];
+      
+      ticketSet.forEach((num, idx) => {
         const wrap = document.createElement('div');
         wrap.className = 'circle-container';
-        createScratchCircle(wrap, num);
-        (idx < 3 ? row1 : row2).appendChild(wrap);
+        createScratchCircle(wrap, num, num === lucky);
+        containers.push(wrap);
+        if (idx === luckyIndex) {
+          luckyContainer.appendChild(wrap);
+        } else {
+          (row1.children.length < 3 ? row1 : row2).appendChild(wrap);
+        }
       });
 
-      const containers = document.querySelectorAll('.circle-container');
-      containers.forEach(container => {
-        const randX = Math.random() * 300 - 150;  // -150px ~ +150px
-        const randY = Math.random() * 300 - 150;
-        container.style.setProperty('--rand-x', `${randX}px`);
-        container.style.setProperty('--rand-y', `${randY}px`);
-        container.classList.add('animate');
-      });
-      
       setTimeout(() => {
-        containers.forEach(container => {
-          container.classList.remove('animate');
+        const rects = containers.map(el => el.getBoundingClientRect());
+        const positions = rects.map(r => ({ x: r.left, y: r.top }));
+        const indices = containers.map((_, i) => i);
+        indices.sort(() => Math.random() - 0.5);
+
+        indices.forEach((i, idx) => {
+          const from = positions[i];
+          const to = positions[idx];
+          const dx = to.x - from.x;
+          const dy = to.y - from.y;
+          containers[i].style.transition = 'transform 0.6s ease';
+          containers[i].style.transform = `translate(${dx}px, ${dy}px)`;
         });
-      }, 800);
+
+        setTimeout(() => {
+          const reordered = indices.map(i => containers[i]);
+          row1.innerHTML = '';
+          row2.innerHTML = '';
+          luckyContainer.innerHTML = '';
+
+          reordered.forEach((wrap) => {
+            wrap.style.transform = 'translate(0, 0)';
+            const label = wrap.querySelector('.number-label');
+            const canvas = wrap.querySelector('canvas');
+            const number = parseInt(label.innerText); // ← 숫자 추출
+
+            const isLuckyCanvas = number === lucky;   // ← lucky 숫자인지 확인
+
+            if (isLuckyCanvas) {
+              luckyContainer.appendChild(wrap);
+            } else {
+              (row1.children.length < 3 ? row1 : row2).appendChild(wrap);
+            }
+
+            scratchCanvas(canvas, isLuckyCanvas); // ← 정확하게 전달
+          });
+        }, 700);
+      }); // ✅ 여기서 generateTicket 함수 끝나는 중괄호와 세미콜론 추가!
     }
 
     function createStarsCanvas() {
@@ -515,8 +550,9 @@
       drawStars();
     }
 
-    createStarsCanvas(); // 실행
+    createStarsCanvas();
     generateTicket();
+
   </script>
 </body>
 </html>
