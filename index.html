@@ -437,10 +437,16 @@
         ctx.fillRect(x, y, 1, 1);
       }
     }
-
+    let isShuffling = false;
+    
     function generateTicket() {
+      if (isShuffling) return;
+      isShuffling = true;
+      
+      const shuffleButton = document.querySelector('.reset button');
+      shuffleButton.disabled = true;
+      
       document.getElementById("result").innerText = "";
-
       const fullSet = [...Array(9).keys()].map(x => x + 1);
       for (let i = fullSet.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -497,9 +503,8 @@
             wrap.style.transform = 'translate(0, 0)';
             const label = wrap.querySelector('.number-label');
             const canvas = wrap.querySelector('canvas');
-            const number = parseInt(label.innerText); // ← 숫자 추출
-
-            const isLuckyCanvas = number === lucky;   // ← lucky 숫자인지 확인
+            const number = parseInt(label.innerText);
+            const isLuckyCanvas = number === lucky;
 
             if (isLuckyCanvas) {
               luckyContainer.appendChild(wrap);
@@ -507,10 +512,13 @@
               (row1.children.length < 3 ? row1 : row2).appendChild(wrap);
             }
 
-            scratchCanvas(canvas, isLuckyCanvas); // ← 정확하게 전달
+            scratchCanvas(canvas, isLuckyCanvas);
           });
+          
+          shuffleButton.disabled = false;
+          isShuffling = false;
         }, 700);
-      }); // ✅ 여기서 generateTicket 함수 끝나는 중괄호와 세미콜론 추가!
+      });
     }
 
     function createStarsCanvas() {
@@ -556,4 +564,3 @@
   </script>
 </body>
 </html>
-
