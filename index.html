@@ -235,6 +235,19 @@
       border-radius: 50%;
       transition: box-shadow 0.3s ease-in-out;
     }
+    .canvas-container, 
+    .circle-container, 
+    .number-label {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .instruction, .lucky-label, h1, #result {
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      cursor: default;
+    }
+
     @media (max-width: 600px) {
       body {
         padding: 4vw !important;
