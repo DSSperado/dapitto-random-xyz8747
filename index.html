@@ -2,9 +2,27 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>다피또</title>
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden; /* 스크롤 제거 */
+    }
+    .game-wrapper {
+      position: relative;
+      width: 2560px;   /* 기준 너비 */
+      height: 1440px;  /* 기준 높이 */
+      transform-origin: top center; /* 상단 기준으로 축소/확대 */
+      padding: 60px;   /* 기존 body에 있던 내부 여백 이동 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    
     @font-face {
       font-family: 'KyoboHand';
       src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff') format('woff');
@@ -19,7 +37,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 60px;
     }
     h1 {
       font-size: 120px;
@@ -305,29 +322,44 @@
   </style>
 </head>
 <body>
-  <audio id="scratch-sound" src="pencil-scratch-30373.mp3" preload="auto"></audio>
-  <canvas id="stars"></canvas>
-  <h1>다 피 또</h1>
-  <div class="ticket">
-    <div class="lucky-section">
-      <div class="lucky-label">행운숫자</div>
-      <div id="lucky-container" class="circle-container"></div>
+  <div class="game-wrapper">
+    <audio id="scratch-sound" src="pencil-scratch-30373.mp3" preload="auto"></audio>
+    <canvas id="stars"></canvas>
+    <h1>다 피 또</h1>
+    <div class="ticket">
+      <div class="lucky-section">
+        <div class="lucky-label">행운숫자</div>
+        <div id="lucky-container" class="circle-container"></div>
+      </div>
+      <div class="number-section">
+        <div class="row" id="row1"></div>
+        <div class="row" id="row2"></div>
+      </div>
     </div>
-    <div class="number-section">
-      <div class="row" id="row1"></div>
-      <div class="row" id="row2"></div>
+    <div class="instruction">
+      <span class="highlight-text">숫자 1 ~ 9 중 2개를 선택</span><br>
+      <span class="highlight-text">행운숫자를 포함하여 2개를 모두 맞추면 성공!</span>
     </div>
+    <div class="reset">
+      <button onclick="generateTicket()" title="reset"></button>
+    </div>
+    <div id="result"></div>
   </div>
-  <div class="instruction">
-    <span class="highlight-text">숫자 1 ~ 9 중 2개를 선택</span><br>
-    <span class="highlight-text">행운숫자를 포함하여 2개를 모두 맞추면 성공!</span>
-  </div>
-  <div class="reset">
-    <button onclick="generateTicket()" title="reset"></button>
-  </div>
-  <div id="result"></div>
-
   <script>
+    let currentScale = 1;
+    
+    function resizeGame() {
+      const wrapper = document.querySelector('.game-wrapper');
+      const scaleX = window.innerWidth  / 2560; // 기준 너비
+      const scaleY = window.innerHeight / 1440; // 기준 높이
+      const scale = Math.min(scaleX, scaleY) * 1.1;
+
+      currentScale = scale;                            // ✅ 현재 스케일 저장
+      wrapper.style.transform = `scale(${scale})`;     // 적용
+    }
+    window.addEventListener('resize', resizeGame);
+    resizeGame();
+
     let ticketSet = [];
     let lucky;
 
@@ -343,18 +375,23 @@
         if (!isDrawing) return;
 
         const rect = canvas.getBoundingClientRect();
-        let x, y;
+        let xCss, yCss;
         if (e.touches && e.touches.length > 0) {
-          x = e.touches[0].clientX - rect.left;
-          y = e.touches[0].clientY - rect.top;
+          xCss = e.touches[0].clientX - rect.left;
+          yCss = e.touches[0].clientY - rect.top;
         } else {
-          x = e.clientX - rect.left;
-          y = e.clientY - rect.top;
+          xCss = e.clientX - rect.left;
+          yCss = e.clientY - rect.top;
         }
+        const x = xCss / currentScale;
+        const y = yCss / currentScale;
+        
+        const brushCss = window.innerHeight * 0.015;
+        const r = brushCss / currentScale;    
 
         ctx.globalCompositeOperation = 'destination-out';
         ctx.beginPath();
-        ctx.arc(x, y, 20, 0, 2 * Math.PI);
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
         ctx.fill();
 
         const particleCount = 3 + Math.floor(Math.random() * 2);
@@ -367,8 +404,8 @@
           const dx = Math.cos(angle) * distance;
           const dy = Math.sin(angle) * distance;
 
-          particle.style.left = `${x}px`;
-          particle.style.top = `${y}px`;
+          particle.style.left = `${xCss}px`;
+          particle.style.top  = `${yCss}px`;
           particle.style.setProperty('--x', `${dx}px`);
           particle.style.setProperty('--y', `${dy}px`);
 
@@ -503,8 +540,8 @@
         indices.forEach((i, idx) => {
           const from = positions[i];
           const to = positions[idx];
-          const dx = to.x - from.x;
-          const dy = to.y - from.y;
+          const dx = (to.x - from.x) / currentScale;
+          const dy = (to.y - from.y) / currentScale;
           containers[i].style.transition = 'transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
           containers[i].style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
           setTimeout(() => {
