@@ -37,6 +37,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
     h1 {
       font-size: 120px;
@@ -352,10 +353,19 @@
       const wrapper = document.querySelector('.game-wrapper');
       const scaleX = window.innerWidth  / 2560; // 기준 너비
       const scaleY = window.innerHeight / 1440; // 기준 높이
-      const scale = Math.min(scaleX, scaleY) * 1.1;
+      
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+      const isPortrait = window.innerHeight > window.innerWidth;
+      
+      let scale;
+      if (isMobile && isPortrait) {
+        scale = scaleY * 1.05;
+      } else {
+        scale = Math.min(scaleX, scaleY) * 1.1;
+      }
 
-      currentScale = scale;                            // ✅ 현재 스케일 저장
-      wrapper.style.transform = `scale(${scale})`;     // 적용
+      currentScale = scale;
+      wrapper.style.transform = `scale(${scale})`;
     }
     window.addEventListener('resize', resizeGame);
     resizeGame();
@@ -621,5 +631,3 @@
   </script>
 </body>
 </html>
-
-
