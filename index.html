@@ -265,7 +265,7 @@
       cursor: default;
     }
 
-    @media @media (max-width: 1024px) {
+    @media (max-width: 768px) {
       body {
         padding: 4vw !important;
         justify-content: center;
@@ -359,7 +359,7 @@
       
       let scale;
       if (isMobile && isPortrait) {
-        scale = scaleY * 1.2;
+        scale = Math.min(scaleX, scaleY) * 1.05;
       } else {
         scale = Math.min(scaleX, scaleY) * 1.1;
       }
@@ -631,6 +631,3 @@
   </script>
 </body>
 </html>
-
-
-
