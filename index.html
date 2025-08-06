@@ -400,7 +400,7 @@
           particle.className = 'spark-particle';
           
           const angle = Math.random() * 2 * Math.PI;
-          const distance = 40 + Math.random() * 20;
+          const distance = (40 + Math.random() * 20) / currentScale;
           const dx = Math.cos(angle) * distance;
           const dy = Math.sin(angle) * distance;
 
@@ -621,4 +621,5 @@
   </script>
 </body>
 </html>
+
 
