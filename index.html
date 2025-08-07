@@ -55,7 +55,7 @@
       100% { transform: translateY(0px); }
     }
     h1 {
-      font-size: 4.5vw;
+      font-size: clamp(120px, 4.5vw, 150px);
       font-weight: 900;
       background: linear-gradient(45deg, #ff6ec4, #7873f5);
       -webkit-background-clip: text;
@@ -71,7 +71,6 @@
       background-size: cover;
       padding: 61px 60px;
       width: 800px;
-      margin-top: -10px;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -651,6 +650,3 @@
   </script>
 </body>
 </html>
-
-
-
