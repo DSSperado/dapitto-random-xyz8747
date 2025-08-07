@@ -326,6 +326,7 @@
   <div class="game-wrapper">
     <div class="background-layer"></div>
       <audio id="scratch-sound" src="pencil-scratch-30373.mp3" preload="auto"></audio>
+      <audio id="shuffle-sound" src="mixkit-retro-game-notification-212.wav" preload="auto"></audio>
       <canvas id="stars"></canvas>
       <h1>다 피 또</h1>
       <div class="ticket">
@@ -468,7 +469,11 @@
 
       canvas.addEventListener('mousemove', clear);
     }
-
+    function playShuffleSound() {
+      const shuffleSound = document.getElementById('shuffle-sound');
+      shuffleSound.currentTime = 0;
+      shuffleSound.play();
+    }
     function createScratchCircle(container, number, isLucky = false) {
       container.innerHTML = '';
       const label = document.createElement('div');
@@ -506,6 +511,8 @@
     let isShuffling = false;
     
     function generateTicket() {
+    playShuffleSound();
+    
       if (isShuffling) return;
       isShuffling = true;
       
@@ -634,4 +641,3 @@
   </script>
 </body>
 </html>
-
