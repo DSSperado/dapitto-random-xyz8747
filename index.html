@@ -22,7 +22,16 @@
       align-items: center;
       gap: 0;
     }
-    
+    .background-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.postimg.cc/0QTt3Bgp/Kakao-Talk-20250806-233544689.png') no-repeat center center;
+      background-size: 73%;
+      z-index: -1;
+    }
     @font-face {
       font-family: 'KyoboHand';
       src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff') format('woff');
@@ -32,8 +41,6 @@
     
     body {
       font-family: 'KyoboHand', sans-serif;
-      background: url('https://i.postimg.cc/0QTt3Bgp/Kakao-Talk-20250806-233544689.png') no-repeat center center fixed;
-      background-size: 73%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -316,28 +323,31 @@
 </head>
 <body>
   <div class="game-wrapper">
-    <audio id="scratch-sound" src="pencil-scratch-30373.mp3" preload="auto"></audio>
-    <canvas id="stars"></canvas>
-    <h1>다 피 또</h1>
-    <div class="ticket">
-      <div class="lucky-section">
-        <div class="lucky-label">행운숫자</div>
-        <div id="lucky-container" class="circle-container"></div>
+    <div class="background-layer"></div>
+      <audio id="scratch-sound" src="pencil-scratch-30373.mp3" preload="auto"></audio>
+      <canvas id="stars"></canvas>
+      <h1>다 피 또</h1>
+      <div class="ticket">
+        <div class="lucky-section">
+          <div class="lucky-label">행운숫자</div>
+          <div id="lucky-container" class="circle-container"></div>
+        </div>
+        <div class="number-section">
+          <div class="row" id="row1"></div>
+          <div class="row" id="row2"></div>
+        </div>
       </div>
-      <div class="number-section">
-        <div class="row" id="row1"></div>
-        <div class="row" id="row2"></div>
+      <div class="instruction">
+        <span class="highlight-text">숫자 1 ~ 9 중 2개를 선택</span><br>
+        <span class="highlight-text">행운숫자를 포함하여 2개를 모두 맞추면 성공!</span>
       </div>
+      <div class="reset">
+        <button onclick="generateTicket()" title="reset"></button>
+      </div>
+      <div id="result"></div>
     </div>
-    <div class="instruction">
-      <span class="highlight-text">숫자 1 ~ 9 중 2개를 선택</span><br>
-      <span class="highlight-text">행운숫자를 포함하여 2개를 모두 맞추면 성공!</span>
-    </div>
-    <div class="reset">
-      <button onclick="generateTicket()" title="reset"></button>
-    </div>
-    <div id="result"></div>
   </div>
+  
   <script>
     let currentScale = 1;
     
