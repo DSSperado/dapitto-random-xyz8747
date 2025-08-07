@@ -38,12 +38,16 @@
       font-weight: normal;
       font-style: normal;
     }
-    
     body {
       font-family: 'KyoboHand', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0px); }
+      50%  { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
     }
     h1 {
       font-size: 4.5vw;
@@ -55,6 +59,7 @@
       letter-spacing: 0.15em;
       margin-bottom: 30px;
       font-family: 'KyoboHand', sans-serif;
+      animation: float 2.5s ease-in-out infinite;
     }
     .ticket {
       background: url('https://i.postimg.cc/hGLCQ0Ns/Kakao-Talk-20250806-233544689-01.png') no-repeat center center;
@@ -641,4 +646,5 @@
   </script>
 </body>
 </html>
+
 
