@@ -549,7 +549,7 @@
           setTimeout(() => {
             containers[i].style.transition += ', transform 0.2s ease';
             containers[i].style.transform = `translate(${dx}px, ${dy}px) scale(1)`;
-          }, 200);
+          }, 50);
         });
 
         setTimeout(() => {
@@ -576,7 +576,7 @@
           
           shuffleButton.disabled = false;
           isShuffling = false;
-        }, 700);
+        }, 200);
       });
     }
 
