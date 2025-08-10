@@ -524,30 +524,47 @@
     
       if (isShuffling) return;
       isShuffling = true;
-      
+    
       const shuffleButton = document.querySelector('.reset button');
       shuffleButton.disabled = true;
-      
+    
       document.getElementById("result").innerText = "";
-      const fullSet = [...Array(9).keys()].map(x => x + 1);
-      for (let i = fullSet.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [fullSet[i], fullSet[j]] = [fullSet[j], fullSet[i]];
-      }
-
-      ticketSet = fullSet.slice(0, 6);
-      const luckyIndex = Math.floor(Math.random() * 6);
-      lucky = ticketSet[luckyIndex];
-
+    
+      // ✅ 항상 2와 6 포함
+      const all = Array.from({ length: 9 }, (_, i) => i + 1);
+      const fixed = [2, 6];
+      const rest = all.filter(n => !fixed.includes(n));
+    
+      // 섞기 함수
+      const shuffle = (arr) => {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      };
+    
+      // 2와 6 + 나머지 4개 랜덤
+      shuffle(rest);
+      const picks = rest.slice(0, 4);
+      const combined = [...fixed, ...picks];
+    
+      // 화면 배치 순서 랜덤
+      ticketSet = shuffle(combined.slice());
+    
+      // ✅ 행운숫자는 2 또는 6 중 랜덤 (항상 둘 중 하나)
+      lucky = fixed[Math.floor(Math.random() * fixed.length)];
+      const luckyIndex = ticketSet.indexOf(lucky);
+    
       const luckyContainer = document.getElementById('lucky-container');
       const row1 = document.getElementById('row1');
       const row2 = document.getElementById('row2');
       luckyContainer.innerHTML = '';
       row1.innerHTML = '';
       row2.innerHTML = '';
-
+    
       const containers = [];
-      
+    
       ticketSet.forEach((num, idx) => {
         const wrap = document.createElement('div');
         wrap.className = 'circle-container';
@@ -559,13 +576,13 @@
           (row1.children.length < 3 ? row1 : row2).appendChild(wrap);
         }
       });
-
+    
       setTimeout(() => {
         const rects = containers.map(el => el.getBoundingClientRect());
         const positions = rects.map(r => ({ x: r.left, y: r.top }));
         const indices = containers.map((_, i) => i);
         indices.sort(() => Math.random() - 0.5);
-
+    
         indices.forEach((i, idx) => {
           const from = positions[i];
           const to = positions[idx];
@@ -578,35 +595,34 @@
             containers[i].style.transform = `translate(${dx}px, ${dy}px) scale(1)`;
           }, 50);
         });
-
+    
         setTimeout(() => {
           const reordered = indices.map(i => containers[i]);
           row1.innerHTML = '';
           row2.innerHTML = '';
           luckyContainer.innerHTML = '';
-
+    
           reordered.forEach((wrap) => {
             wrap.style.transform = 'translate(0, 0)';
             const label = wrap.querySelector('.number-label');
             const canvas = wrap.querySelector('canvas');
             const number = parseInt(label.innerText);
             const isLuckyCanvas = number === lucky;
-
+    
             if (isLuckyCanvas) {
               luckyContainer.appendChild(wrap);
             } else {
               (row1.children.length < 3 ? row1 : row2).appendChild(wrap);
             }
-
+    
             scratchCanvas(canvas, isLuckyCanvas);
           });
-          
+    
           shuffleButton.disabled = false;
           isShuffling = false;
         }, 200);
       });
     }
-
     function createStarsCanvas() {
       const canvas = document.getElementById("stars");
       const ctx = canvas.getContext("2d");
@@ -650,4 +666,5 @@
   </script>
 </body>
 </html>
+
 
